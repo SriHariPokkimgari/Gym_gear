@@ -8,10 +8,10 @@ import { signToken } from "@/lib/auth";
 export async function POST(request: NextRequest){
     try {
        
-        const {email, password} = await request.json() as LoginData;
+        const  {email, password} = await request.json() as LoginData;
 
-        if(!emailValidator(email) || !password){
-            return NextResponse.json({message: 'Invalid credentials'}, {status: 400});
+        if(!email || !password){
+            return NextResponse.json({message: ' Invalid credentials'}, {status: 400});
         }
 
         const result = await pool.query(`SELECT * FROM users WHERE email=$1`, [email]);
