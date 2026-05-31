@@ -3,7 +3,7 @@ import { verifyToken } from "./auth";
 
 export async function getAuthUser(request: NextRequest){
     try {
-        const token = request.cookies.get('AccessToken')?.value
+        const token = request.cookies.get('AccessToken')?.value;
 
         if(!token){
             return null

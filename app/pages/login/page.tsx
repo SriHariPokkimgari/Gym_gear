@@ -14,14 +14,16 @@ export default function SignIn() {
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      await axios.post("/api/auth/login", formData, { withCredentials: true });
+      await axios.post("/api/auth/login", formData, {
+        withCredentials: true,
+      });
       await login();
-      router.push("/products");
+      router.push("/pages/products");
     } catch (err: any) {
       setError(err.response?.data?.message || "Something went wrong.");
     } finally {
