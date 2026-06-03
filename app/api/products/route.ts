@@ -10,9 +10,9 @@ export async function GET(request: NextRequest){
         const search = searchParams.get("search");
 
         let query = `
-            SELECT p.*, ,c.name AS category_name
+            SELECT p.*,c.name AS category_name
             FROM products p 
-            LEFT JOINT categories c ON p.category_id = c.id
+            LEFT JOIN categories c ON p.category_id = c.id
             WHERE 1=1
         `
 
@@ -49,12 +49,13 @@ export async function GET(request: NextRequest){
 
 //POST create product (admin only)
 export async function POST(request: NextRequest){
-    const authError = requireAdmin(request);
-    if(authError) return authError;
+    const authError = await requireAdmin(request);
+    
+    if(authError) return authError
 
     try {
         const {name, description, price, stock, image_url, category_id} = await request.json();
-
+        console.log(name, description)
         if(!name || !price || !category_id){
             return NextResponse.json(
                 {message: 'Name, price and category are required.'},

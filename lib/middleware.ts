@@ -31,7 +31,7 @@ export function requireAuth(request: NextRequest){
 
 export async function requireAdmin(request: NextRequest){
     const user = await getAuthUser(request);
-
+    
     if (!user) {
     return NextResponse.json(
       { message: "Access denied. Please login." },

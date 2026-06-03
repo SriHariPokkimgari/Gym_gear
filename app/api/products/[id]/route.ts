@@ -3,6 +3,7 @@ import pool from "@/lib/db";
 import { requireAdmin } from "@/lib/middleware";
 
 export async function GET(request: NextRequest, {params}: {params: {id:string}}){
+    
     try {
         const result = await pool.query(
             `SELECT p.*, c.name AS category_name
