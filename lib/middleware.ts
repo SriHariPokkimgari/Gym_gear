@@ -16,9 +16,9 @@ export async function getAuthUser(request: NextRequest){
     }
 };
 
-export function requireAuth(request: NextRequest){
-    const user = getAuthUser(request);
-
+export async function requireAuth(request: NextRequest){
+    const user = await getAuthUser(request);
+    
     if(!user){
         return NextResponse.json(
             {mesage: 'Access denied. Login again.'},

@@ -3,17 +3,17 @@ import { getAuthUser, requireAuth } from "@/lib/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest){
-    const authError =  requireAuth(request);
+    const authError = await requireAuth(request);
     if(authError) return authError;
-    
+  
+    const user = await getAuthUser(request);
+   
     try {
-        const user = await getAuthUser(request);
-        
         let cart = await pool.query(`
           SELECT id FROM carts
           WHERE user_id = $1  
         `, [user?.id]);
-
+        
         if(cart.rowCount === 0){
             cart = await pool.query(`
               INSERT INTO carts(user_id) VALUES($1) RETURNING id  
@@ -32,6 +32,7 @@ export async function GET(request: NextRequest){
           LEFT JOIN categories c ON p.category_id = c.id
           WHERE ci.cart_id = $1
         `, [cart_id])
+
          return NextResponse.json({data: items.rows}, {status: 200});
     } catch (error) {
         console.error("Get cart error:", error);

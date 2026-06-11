@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { CartItem, Product } from "@/types";
+import { useAuth } from "./AuthContext";
+import axios from "axios";
 
 interface CartContextType {
   items: CartItem[];
@@ -11,59 +13,116 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  fetchCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    const saved = localStorage.getItem("gymgear_cart");
-    if (saved) setItems(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("gymgear_cart", JSON.stringify(items));
-  }, [items]);
-
-  const addToCart = (product: Product) => {
-    setItems((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        );
-      }
-      //New item
-      return [...prev, { product, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (productId: number) => {
-    setItems((prev) => prev.filter((item) => item.product.id !== productId));
-  };
-
-  const updateQuantity = (productId: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
-      return;
+    if (isLoggedIn) {
+      fetchCart();
+    } else {
+      const saved = localStorage.getItem("gymgear_guest_cart");
+      if (saved) setItems(JSON.parse(saved));
     }
-    setItems((prev) =>
-      prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item,
-      ),
-    );
+  }, [isLoggedIn]);
+
+  const fetchCart = async () => {
+    try {
+      const res = await axios.get("/api/cart", { withCredentials: true });
+      const cartItems: CartItem[] = res.data.data.map((item: any) => ({
+        product: {
+          id: item.product_id,
+          name: item.name,
+          price: item.price,
+          image_url: item.image_url,
+          stock: item.stock,
+          category_name: item.category_name,
+        },
+        quantity: item.quantity,
+      }));
+      setItems(cartItems);
+    } catch (error) {
+      console.error("Fetch cart error: ", error);
+    }
   };
 
-  const clearCart = () => {
-    setItems([]);
-    localStorage.removeItem("gymgear_cart");
+  const saveGuestCart = (newItem: CartItem[]) => {
+    localStorage.setItem("gymgear_guest_cart", JSON.stringify(newItem));
   };
 
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 1);
+  const addToCart = async (product: Product) => {
+    if (isLoggedIn) {
+      await axios.post(
+        "/api/cart/add",
+        { product_id: product.id, quantity: 1 },
+        { withCredentials: true },
+      );
+      await fetchCart();
+    } else {
+      const existing = items.find((item) => item.product.id === product.id);
+      const newItems = existing
+        ? items.map((i) =>
+            i.product.id === product.id
+              ? { ...i, quantity: i.quantity + 1 }
+              : i,
+          )
+        : [...items, { product, quantity: 1 }];
+      setItems(newItems);
+      saveGuestCart(newItems);
+    }
+  };
+
+  const removeFromCart = async (productId: number) => {
+    if (isLoggedIn) {
+      await axios.delete("/api/cart/remove", {
+        data: { product_id: productId },
+        withCredentials: true,
+      });
+      await fetchCart();
+    } else {
+      const newItems = items.filter((item) => item.product.id !== productId);
+      setItems(newItems);
+      saveGuestCart(newItems);
+    }
+  };
+
+  const updateQuantity = async (productId: number, quantity: number) => {
+    if (isLoggedIn) {
+      await axios.put(
+        "/api/cart/update",
+        { product_id: productId, quantity },
+        { withCredentials: true },
+      );
+      await fetchCart();
+    } else {
+      const newItems =
+        quantity <= 0
+          ? items.filter((item) => item.product.id !== productId)
+          : items.map((item) =>
+              item.product.id === productId ? { ...item, quantity } : item,
+            );
+
+      setItems(newItems);
+      saveGuestCart(newItems);
+    }
+  };
+
+  const clearCart = async () => {
+    if (isLoggedIn) {
+      await axios.delete("/api/cart/removeall", { withCredentials: true });
+      await fetchCart();
+    } else {
+      setItems([]);
+      localStorage.removeItem("gymgear_guest_cart");
+    }
+  };
+
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const totalPrice = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -80,6 +139,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         clearCart,
         totalItems,
         totalPrice,
+        fetchCart,
       }}
     >
       {children}

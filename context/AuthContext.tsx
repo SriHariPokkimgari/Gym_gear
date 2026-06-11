@@ -1,5 +1,6 @@
 "use client";
 
+import { CartItem } from "@/types";
 import axios from "axios";
 import React, { createContext, useContext, useState, useEffect } from "react";
 
@@ -39,6 +40,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async () => {
     await checkAuth();
+
+    const guestCart = localStorage.getItem("gymgear_guest_cart");
+    if (guestCart) {
+      const items = JSON.parse(guestCart);
+      if (items.lngth > 0) {
+        await axios.post(
+          "/api/cart/merge",
+          {
+            items: items.map((item: CartItem) => ({
+              product_id: item.product.id,
+              quantity: item.quantity,
+            })),
+          },
+          { withCredentials: true },
+        );
+        localStorage.removeItem("gymgear_guest_cart");
+      }
+    }
   };
 
   const logout = async () => {

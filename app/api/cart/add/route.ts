@@ -3,7 +3,7 @@ import pool from "@/lib/db";
 import { getAuthUser, requireAuth } from "@/lib/middleware";
 
 export async function POST(request: NextRequest){
-    const authError = requireAuth(request);
+    const authError = await requireAuth(request);
     if(authError) return authError;
     
     const user = await getAuthUser(request);
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest){
         await pool.query(`
           INSERT INTO cart_items(cart_id, product_id, quantity)
           VALUES ($1, $2, $3)
-          ON CONFLICT(cart_id, product_d)
+          ON CONFLICT(cart_id, product_id)
           DO UPDATE SET quantity = cart_items.quantity + $3  
         `, [cart_id, product_id, quantity]);
 

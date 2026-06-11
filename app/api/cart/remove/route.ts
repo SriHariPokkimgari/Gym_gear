@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { requireAuth, getAuthUser } from "@/lib/middleware";
 
-export async function POST(request: NextRequest){
+export async function DELETE(request: NextRequest){
     const authError = requireAuth(request);
     if(authError) return authError;
 
