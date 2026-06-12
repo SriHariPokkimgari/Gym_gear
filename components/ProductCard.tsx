@@ -14,7 +14,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const fmt = (price: number) =>
     `₹${price.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
-
   return (
     <div className="group bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl overflow-hidden transition-all hover:-translate-y-1">
       {/* Image */}

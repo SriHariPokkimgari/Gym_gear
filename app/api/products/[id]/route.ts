@@ -1,22 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { requireAdmin } from "@/lib/middleware";
+import { Construction } from "lucide-react";
 
 export async function GET(request: NextRequest, {params}: {params: {id:string}}){
-    
+    const {id} = await params;
+   
     try {
         const result = await pool.query(
             `SELECT p.*, c.name AS category_name
             FROM products p
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE p.id = $1`,
-            [params.id]
+            [id]
         );
 
         if(result.rowCount === 0) {
             return NextResponse.json(
                 {message: 'Products not found.'},
-                {status: 404}
+                {status: 400}
             )
         };
 
