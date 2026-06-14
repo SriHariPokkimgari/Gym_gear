@@ -12,7 +12,9 @@ export async function DELETE(request: NextRequest){
     try {
         await pool.query(`
            DELETE FROM cart_items
-           WHERE user_id = $1 
+           WHERE cart_id = (
+            SELECT id from carts WHERE user_id = $1
+           ) 
         `, [user?.id]);
         return NextResponse.json(
             {message: 'All cart items removed.'},
