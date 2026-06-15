@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LoginData } from "@/types";
-import emailValidator from 'node-email-verifier';
 import pool from "@/lib/db";
 import bcrypt from 'bcrypt'
 import { signToken } from "@/lib/auth";
@@ -44,6 +43,6 @@ export async function POST(request: NextRequest){
         return response;
     } catch (error) {
         console.log(error);
-        return NextResponse.json({mesage: 'something went wrong'}, {status: 500})
+        return NextResponse.json({mesage: 'something went wrong.'}, {status: 500})
     }
 }

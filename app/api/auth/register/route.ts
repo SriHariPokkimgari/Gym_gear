@@ -9,7 +9,7 @@ export async function POST(request: NextRequest){
 
         if(!name || !email || !password){
             return NextResponse.json(
-                {message: 'Credentials were missing or invalid'},
+                {message: 'Credentials were missing or invalid.'},
                 {status: 400}
             )
         };
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest){
 
         if(user.rowCount !== 0){
             return NextResponse.json(
-                {message: 'Email already exists. Try another one or login'},
+                {message: 'Email already exists. Try another one or login.'},
                 {status: 400}
             )
         };
@@ -32,11 +32,9 @@ export async function POST(request: NextRequest){
         const newUser = await pool.query(
             `INSERT INTO users(name, email, password) 
             VALUES($1, $2, $3)
-            RETURNING *`,
+            `,
             [name, email, hashedPassword]
         )
-
-        console.log(newUser.rows);
 
         return NextResponse.json(
             {message: 'Account creation successful'},
@@ -45,7 +43,7 @@ export async function POST(request: NextRequest){
     } catch (error) {
         console.log("Register error: ", error);
         return NextResponse.json(
-            {message: 'Something went wrong. Try again later'},
+            {message: 'Something went wrong. Try again later.'},
             {status: 500}
         )
     }

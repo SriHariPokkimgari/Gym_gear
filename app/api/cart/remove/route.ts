@@ -19,11 +19,11 @@ export async function DELETE(request: NextRequest){
             return NextResponse.json({message: 'Cart not found.'}, {status: 404});
         }
 
-        const cart_id = cart.rows[0].id;
+        const cartId = cart.rows[0].id;
 
         await pool.query(`
           DELETE FROM cart_items WHERE cart_id = $1 AND product_id = $2  
-        `, [cart_id, product_id]);
+        `, [cartId, product_id]);
 
         return NextResponse.json({message: 'Item removed.'}, {status: 200});
     } catch (error) {
