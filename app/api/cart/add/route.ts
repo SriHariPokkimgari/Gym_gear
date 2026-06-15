@@ -20,14 +20,14 @@ export async function POST(request: NextRequest){
             `, [user?.id]);
         }
 
-        const cartId = cart.rows[0].id;
+        const cart_id = cart.rows[0].id;
 
         await pool.query(`
           INSERT INTO cart_items(cart_id, product_id, quantity)
           VALUES ($1, $2, $3)
           ON CONFLICT(cart_id, product_id)
           DO UPDATE SET quantity = cart_items.quantity + $3  
-        `, [cartId, product_id, quantity]);
+        `, [cart_id, product_id, quantity]);
 
         return NextResponse.json({mesage: 'Item added to cart.'}, {status: 200});
 

@@ -19,7 +19,7 @@ export async function PUT(request: NextRequest){
             return NextResponse.json({message: 'Cart not found'}, {status: 404});
         };
 
-        const cartId = cart.rows[0].id;
+        const cart_id = cart.rows[0].id;
 
         if(quantity <= 0){
             await pool.query(`
@@ -29,7 +29,7 @@ export async function PUT(request: NextRequest){
             await pool.query(`
               UPDATE cart_items SET quantity = $1
               WHERE cart_id = $2 AND product_id = $3 
-            `, [quantity, cartId, product_id]);
+            `, [quantity, cart_id, product_id]);
         }
 
         return NextResponse.json({message: 'Cart updated.'}, {status: 200});

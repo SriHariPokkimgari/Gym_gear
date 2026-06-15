@@ -10,5 +10,6 @@ export async function POST(){
     response.cookies.delete('AccessToken');
 
     return response; 
-
+  
+  
 }

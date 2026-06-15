@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { requireAuth, getAuthUser } from "@/lib/middleware";
-
+import { AwardIcon } from "lucide-react";
+import next from "next";
 
 export async function POST(request: NextRequest){
     const authError = requireAuth(request);
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest){
             `, [user?.id]);
         }
 
-        const cartId = cart.rows[0].id;
+        const cart_id = cart.rows[0].id;
 
         for(const item of items){
             await pool.query(`
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest){
               VALUES($1, $2, $3)  
               ON CONFLICT (cart_id, product_id)
               DO UPDATE SET quantity = cart_items.quantity + $3
-            `, [cartId, item.product_id, item.quantity]);
+            `, [cart_id, item.product_id, item.quantity]);
         };
 
         return NextResponse.json({message: 'Cart merged.'}, {status: 200});

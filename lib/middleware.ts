@@ -21,7 +21,7 @@ export async function requireAuth(request: NextRequest){
     
     if(!user){
         return NextResponse.json(
-            {mesage: 'Access denied. Please login.'},
+            {mesage: 'Access denied. Login again.'},
             {status: 401}
         )
     };
