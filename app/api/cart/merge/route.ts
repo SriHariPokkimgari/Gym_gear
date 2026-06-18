@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { requireAuth, getAuthUser } from "@/lib/middleware";
-import { AwardIcon } from "lucide-react";
-import next from "next";
+
 
 export async function POST(request: NextRequest){
-    const authError = requireAuth(request);
+    const authError = await requireAuth(request);
     if(authError) return authError;
 
     const user = await getAuthUser(request);

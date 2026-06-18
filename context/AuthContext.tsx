@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const guestCart = localStorage.getItem("gymgear_guest_cart");
     if (guestCart) {
       const items = JSON.parse(guestCart);
-      if (items.lngth > 0) {
+      if (items.length > 0) {
         await axios.post(
           "/api/cart/merge",
           {

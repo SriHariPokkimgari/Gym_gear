@@ -36,8 +36,6 @@ export async function POST(request: NextRequest){
             [name, email, hashedPassword]
         )
 
-        console.log(newUser.rows);
-
         return NextResponse.json(
             {message: 'Account creation successful'},
             {status: 200}

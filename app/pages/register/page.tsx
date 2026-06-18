@@ -19,7 +19,7 @@ export default function Register() {
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -41,7 +41,7 @@ export default function Register() {
         { withCredentials: true },
       );
       await login();
-      router.push("/products");
+      router.push("/pages/products");
     } catch (err: any) {
       setError(err.response?.data?.message || "Something went wrong.");
     } finally {

@@ -3,7 +3,7 @@ import pool from "@/lib/db";
 import { requireAuth, getAuthUser } from "@/lib/middleware";
 
 export async function DELETE(request: NextRequest){
-    const authError = requireAuth(request);
+    const authError = await requireAuth(request);
     if(authError) return authError;
 
     const user = await getAuthUser(request);
