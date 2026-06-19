@@ -4,7 +4,7 @@ import { useCart } from "@/context/CartContext";
 import axios from "axios";
 import { CreditCard, Package } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const loadRazorpay = () => {
   return new Promise((resolve) => {
@@ -101,10 +101,11 @@ export default function CheckoutPage() {
     }
   };
 
-  if (items.length === 0) {
-    router.push("/pages/cart");
-    return null;
-  }
+  useEffect(() => {
+    if (items.length === 0) {
+      router.push("/pages/cart");
+    }
+  }, [items]);
 
   return (
     <div className="min-h-screen bg-slate-950">
