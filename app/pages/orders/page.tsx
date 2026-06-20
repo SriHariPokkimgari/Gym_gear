@@ -113,31 +113,36 @@ export default function OrdersPage() {
                 href={`/pages/orders/${order.id}`}
                 className="block bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 transition-all group"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-4 min-w-0">
+                    {/* Icon */}
                     <div className="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center shrink-0">
                       <Package className="w-5 h-5 text-slate-500" />
                     </div>
 
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-white text-sm font-semibold">
-                        Order #{order.id}
+                    {/* Title + badge + date — all in ONE column now */}
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <p className="text-white text-sm font-semibold">
+                          Order #{order.id}
+                        </p>
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full border ${statusStyle(order.status)}`}
+                        >
+                          {order.status.charAt(0).toUpperCase() +
+                            order.status.slice(1)}
+                        </span>
+                      </div>
+                      <p className="text-slate-500 text-xs">
+                        {formatDate(order.created_at)} · {order.item_count} item
+                        {Number(order.item_count) !== 1 ? "s" : ""}
                       </p>
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full border ${statusStyle(order.status)}`}
-                      >
-                        {order.status.charAt(0).toUpperCase() +
-                          order.status.slice(1)}
-                      </span>
                     </div>
-                    <p className="text-slate-500 text-xs">
-                      {formatDate(order.created_at)} · {order.item_count} item
-                      {Number(order.item_count) !== 1 ? "s" : ""}
-                    </p>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <p className="text-orange-400 font-bold text-sm">
+                  {/* Right side — price + chevron */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <p className="text-orange-400 font-bold text-sm whitespace-nowrap">
                       {fmt(order.total_amount)}
                     </p>
                     <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />

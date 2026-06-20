@@ -5,10 +5,11 @@ import { requireAuth, getAuthUser } from "@/lib/middleware";
 
 export async function POST(request: NextRequest){
     const authError = await requireAuth(request);
+    console.log(authError);
     if(authError) return authError;
 
     const user = await getAuthUser(request);
-
+    
     try {
         const {items} = await request.json() as {
             items: {product_id: number, quantity: number}[]

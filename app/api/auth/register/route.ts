@@ -2,6 +2,8 @@ import pool from "@/lib/db";
 import { RegisterData } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt'
+import  jwt from "jsonwebtoken";
+import { signToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest){
     try {
@@ -36,10 +38,22 @@ export async function POST(request: NextRequest){
             [name, email, hashedPassword]
         )
 
-        return NextResponse.json(
+        const token = signToken({id: newUser.rows[0].id, role: newUser.rows[0].role});
+
+        const response =  NextResponse.json(
             {message: 'Account creation successful'},
             {status: 200}
         );
+
+          response.cookies.set('AccessToken', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24, // seconds (1 day)
+            path: "/",
+        });
+
+        return response;
     } catch (error) {
         console.log("Register error: ", error);
         return NextResponse.json(

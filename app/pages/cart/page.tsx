@@ -71,66 +71,75 @@ export default function CartPage() {
             {items.map((item) => (
               <div
                 key={item.product.id}
-                className="bg-slate-900 border border-slate-800 rounded-2xl px-4 flex items-center gap-4"
+                className="bg-slate-900 border border-slate-800 rounded-2xl p-4"
               >
-                <div className="w-20 h-20 bg-slate-800 rounded-xl overflow-hidden shrink-0">
-                  {item.product.image_url ? (
-                    <img
-                      src={item.product.image_url}
-                      alt={item.product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Package className="w-6 h-6 text-slate-600" />
-                    </div>
-                  )}
-                </div>
+                <div className="flex items-center gap-4">
+                  {/* Image */}
+                  <div className="w-20 h-20 bg-slate-800 rounded-xl overflow-hidden shrink-0">
+                    {item.product.image_url ? (
+                      <img
+                        src={item.product.image_url}
+                        alt={item.product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Package className="w-6 h-6 text-slate-600" />
+                      </div>
+                    )}
+                  </div>
 
-                <div className="flex-1 min-w-0">
-                  <Link href={`/pages/products/${item.product.id}`}>
-                    <h3 className="text-white text-sm font-medium hover:text-orange-400 transition-colors truncate">
-                      {item.product.name}
-                    </h3>
-                  </Link>
-                  <p className="text-orange-400 text-sm font-semibold mt-1">
-                    {fmt(item.product.price)}
-                  </p>
-                </div>
+                  {/* Details */}
+                  <div className="flex-1 min-w-0">
+                    <Link href={`/products/${item.product.id}`}>
+                      <h3 className="text-white text-sm font-medium hover:text-orange-400 transition-colors truncate">
+                        {item.product.name}
+                      </h3>
+                    </Link>
+                    <p className="text-orange-400 text-sm font-semibold mt-1">
+                      {fmt(item.product.price)}
+                    </p>
+                  </div>
 
-                <div className="flex items-center gap-2 bg-slate-800 rounded-lg px-2 py-1.5 shrink-0">
+                  {/* Delete — always top right on mobile too */}
                   <button
-                    onClick={() =>
-                      updateQuantity(item.product.id, item.quantity - 1)
-                    }
-                    className="text-slate-400 hover:text-white transition-colors"
+                    onClick={() => removeFromCart(item.product.id)}
+                    className="text-slate-500 hover:text-red-400 transition-colors shrink-0 self-start"
                   >
-                    <Minus className="w-3.5 h-3.5" />
-                  </button>
-                  <span className="text-white text-sm font-semibold w-5 text-center">
-                    {item.quantity}
-                  </span>
-                  <button
-                    onClick={() =>
-                      updateQuantity(item.product.id, item.quantity + 1)
-                    }
-                    disabled={item.quantity >= item.product.stock}
-                    className="text-slate-400 hover:text-white disabled:opacity-30 transition-colors"
-                  >
-                    <Plus className="3.5 h-3.5" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
 
-                <div className="text-right shrink-0 w-20">
+                {/* Bottom row — quantity + subtotal, full width on all screens */}
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-800">
+                  {/* Quantity — visible on ALL screen sizes now */}
+                  <div className="flex items-center gap-3 bg-slate-800 rounded-lg px-2 py-1.5">
+                    <button
+                      onClick={() =>
+                        updateQuantity(item.product.id, item.quantity - 1)
+                      }
+                      className="text-slate-400 hover:text-white transition-colors"
+                    >
+                      <Minus className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="text-white text-sm font-semibold w-5 text-center">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() =>
+                        updateQuantity(item.product.id, item.quantity + 1)
+                      }
+                      disabled={item.quantity >= item.product.stock}
+                      className="text-slate-400 hover:text-white disabled:opacity-30 transition-colors"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Subtotal */}
                   <p className="text-white text-sm font-semibold">
                     {fmt(item.product.price * item.quantity)}
                   </p>
-                  <button
-                    onClick={() => removeFromCart(item.product.id)}
-                    className="text-slate-500 hover:text-red-400 transition-colors mt-1"
-                  >
-                    <Trash2 className="w-4 h-4 inline" />
-                  </button>
                 </div>
               </div>
             ))}

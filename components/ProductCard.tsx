@@ -60,8 +60,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.description}
         </p>
 
-        <div className="flex items-center justify-between">
-          <p className="text-orange-400 font-bold">{fmt(product.price)}</p>
+        <div className="flex items-center justify-between gap-1">
+          <p className="text-orange-400 font-bold text-xs sm:text-sm ">
+            {fmt(product.price)}
+          </p>
           <button
             onClick={() => addToCart(product)}
             disabled={product.stock === 0}
