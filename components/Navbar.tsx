@@ -1,43 +1,91 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
+import { Dumbbell, ShoppingCart, User, LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Dumbbell, LogOut, ShoppingCart, User } from "lucide-react";
 
-const NavBar = () => {
+const Navbar = () => {
   const { isLoggedIn, user, logout } = useAuth();
   const { totalItems } = useCart();
   const router = useRouter();
+  const pathName = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("");
 
   const handleLogout = async () => {
     await logout();
+    setMobileMenuOpen(false);
     router.push("/pages/login");
   };
+
+  useEffect(() => {
+    if (pathName.split("/")[2] === "products") {
+      setActiveTab("products");
+    }
+  }, [pathName]);
+
+  const navLinkClass = (tab: string) =>
+    `text-slate-400 hover:text-white text-sm transition-colors ${
+      activeTab === tab ? "border-b-2 border-orange-500 text-white" : ""
+    }`;
+
+  const mobileLinkClass = (tab: string) =>
+    `block w-full px-4 py-3 rounded-xl text-sm transition-colors ${
+      activeTab === tab
+        ? "bg-orange-500/10 text-orange-400 font-medium"
+        : "text-slate-400 hover:bg-slate-800 hover:text-white"
+    }`;
+
   return (
     <nav className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
-      <div className="text-white max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5">
+        <Link
+          href="/"
+          onClick={() => setActiveTab("home")}
+          className="flex items-center gap-2.5"
+        >
           <Dumbbell className="w-7 h-7 text-orange-500" />
-          <span className=" font-bold text-lg tracking-tight ">GymGear</span>
+          <span className="text-white font-bold text-lg tracking-tight">
+            GymGear
+          </span>
         </Link>
 
-        {/* Nav links */}
+        {/* Desktop nav links */}
         <div className="hidden sm:flex items-center gap-6">
           <Link
+            href="/"
+            className={navLinkClass("home")}
+            onClick={() => setActiveTab("home")}
+          >
+            Home
+          </Link>
+          <Link
             href="/pages/products"
-            className="text-slate-400 hover:text-white text-sm transition-colors"
+            className={navLinkClass("products")}
+            onClick={() => setActiveTab("products")}
           >
             Products
           </Link>
           {user?.role === "admin" && (
             <Link
               href="/pages/admin"
-              className="text-orange-400 hover:text-orange-300 text-sm transition-colors"
+              className={navLinkClass("admin")}
+              onClick={() => setActiveTab("admin")}
             >
               Admin
+            </Link>
+          )}
+          {isLoggedIn && (
+            <Link
+              href="/pages/orders"
+              className={navLinkClass("orders")}
+              onClick={() => setActiveTab("orders")}
+            >
+              Orders
             </Link>
           )}
         </div>
@@ -57,27 +105,116 @@ const NavBar = () => {
             )}
           </Link>
 
-          {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors "
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="hidden sm:inline">Logout</span>
-            </button>
-          ) : (
-            <Link
-              href="/pages/login"
-              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
-            >
-              <User className="w-4 h-4" />
-              Sign in
-            </Link>
-          )}
+          {/* Desktop auth button */}
+          <div className="hidden sm:block">
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/pages/login"
+                className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+              >
+                <User className="w-4 h-4" />
+                Sign in
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile hamburger toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="sm:hidden p-2 text-slate-400 hover:text-white transition-colors"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile dropdown menu */}
+      {mobileMenuOpen && (
+        <div className="sm:hidden border-t border-slate-800 px-4 py-3 space-y-1 bg-slate-950">
+          <Link
+            href="/"
+            className={mobileLinkClass("home")}
+            onClick={() => {
+              setActiveTab("home");
+              setMobileMenuOpen(false);
+            }}
+          >
+            Home
+          </Link>
+          <Link
+            href="/pages/products"
+            className={mobileLinkClass("products")}
+            onClick={() => {
+              setActiveTab("products");
+              setMobileMenuOpen(false);
+            }}
+          >
+            Products
+          </Link>
+
+          {user?.role === "admin" && (
+            <Link
+              href="/pages/admin"
+              className={mobileLinkClass("admin")}
+              onClick={() => {
+                setActiveTab("admin");
+                setMobileMenuOpen(false);
+              }}
+            >
+              Admin
+            </Link>
+          )}
+
+          {isLoggedIn && (
+            <Link
+              href="/pages/orders"
+              className={mobileLinkClass("orders")}
+              onClick={() => {
+                setActiveTab("orders");
+                setMobileMenuOpen(false);
+              }}
+            >
+              Orders
+            </Link>
+          )}
+
+          {/* Auth action inside mobile menu */}
+          <div className="pt-2 border-t border-slate-800 mt-2">
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 w-full px-4 py-3 rounded-xl text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/pages/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full bg-orange-500 hover:bg-orange-400 text-white text-sm font-semibold px-4 py-3 rounded-xl transition-colors"
+              >
+                <User className="w-4 h-4" />
+                Sign in
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
 
-export default NavBar;
+export default Navbar;

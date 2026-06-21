@@ -61,7 +61,8 @@ export default function CartPage() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-white">Your Cart</h1>
           <p className="text-slate-400 text-sm mt-1">
-            {items.length} item{items.length > 1 ? "s" : ""} in cart
+            {items.reduce((sum, item) => sum + item.quantity, 0)} item
+            {items.length > 1 ? "s" : ""} in cart
           </p>
         </div>
 
