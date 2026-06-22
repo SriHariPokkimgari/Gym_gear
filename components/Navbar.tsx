@@ -6,6 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Dumbbell, ShoppingCart, User, LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
+import path from "path";
 
 const Navbar = () => {
   const { isLoggedIn, user, logout } = useAuth();
@@ -24,6 +25,10 @@ const Navbar = () => {
   useEffect(() => {
     if (pathName.split("/")[2] === "products") {
       setActiveTab("products");
+    } else if (pathName.split("/")[2] === "login") {
+      setActiveTab("");
+    } else if (pathName.split("/")[2] === "cart") {
+      setActiveTab("");
     }
   }, [pathName]);
 

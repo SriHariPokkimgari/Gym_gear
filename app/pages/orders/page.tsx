@@ -1,7 +1,7 @@
 "use client";
 
-import { useRequireAuth } from "@/hooks/useRequiredAuth";
-import axios from "axios";
+//import { useRequireAuth } from "@/hooks/useRequiredAuth";
+import API from "@/lib/axios";
 import { ChevronRight, Package, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,20 +15,19 @@ interface Order {
 }
 
 export default function OrdersPage() {
-  const { isLoggedIn, loading: authLoading } = useRequireAuth();
+  //const { isLoggedIn, loading: authLoading } = useRequireAuth();
   const [orders, setOrders] = useState<Order[]>([]);
-  const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isLoggedIn) fetchOrders();
-  }, [isLoggedIn]);
+    fetchOrders();
+  }, []);
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("/api/orders", { withCredentials: true });
+      const res = await API.get("/orders", { withCredentials: true });
       setOrders(res.data.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
     } finally {
       setLoading(false);
@@ -58,7 +57,7 @@ export default function OrdersPage() {
     }
   };
 
-  if (authLoading || !isLoggedIn) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />

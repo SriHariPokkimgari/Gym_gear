@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LoginData } from "@/types";
-import emailValidator from 'node-email-verifier';
 import pool from "@/lib/db";
 import bcrypt from 'bcrypt'
-import { signToken } from "@/lib/auth";
+import { signAccessToken, signRefreshToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest){
     try {
@@ -27,20 +26,40 @@ export async function POST(request: NextRequest){
             return NextResponse.json({message: 'Email or password incorrect'}, {status: 400});
         }
 
-        const token = signToken({id: user.id, role: user.role});
+        const accessToken = signAccessToken({id: user.id, role: user.role});
+
+        const refresToken = signRefreshToken({id: user.id, role: user.role})
+
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 30);
+
+        await pool.query(`
+          INSERT INTO refresh_tokens(user_id, token, expires_at) 
+          VALUES($1, $2, $3) 
+        `, [user.id, refresToken, expiresAt]);
+
 
         const response = NextResponse.json(
             {message: 'Login successful'},
             {status: 200}
         );
 
-        response.cookies.set('AccessToken', token, {
+        response.cookies.set('AccessToken', accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            maxAge: 60 * 60 * 24, // seconds (1 day)
+            maxAge: 60 * 15, 
             path: "/",
         });
+
+        response.cookies.set('RefreshToken', refresToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24 * 30,
+            path: '/'
+        });
+        
         return response;
     } catch (error) {
         console.log(error);

@@ -1,9 +1,8 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { useRequireAuth } from "@/hooks/useRequiredAuth";
 import { Category, Product } from "@/types";
-import axios from "axios";
+import API from "@/lib/axios";
 import {
   Check,
   LayoutDashboard,
@@ -58,7 +57,6 @@ const EmptyForm: ProductForm = {
 };
 
 export default function AdminPage() {
-  const { isLoggedIn, loading: authLoading } = useRequireAuth();
   const { user } = useAuth();
   const router = useRouter();
 
@@ -76,16 +74,16 @@ export default function AdminPage() {
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isLoggedIn && user?.role !== "admin") {
+    if (user?.role !== "admin") {
       router.push("/");
     }
-  }, [isLoggedIn, user]);
+  }, [user]);
 
   useEffect(() => {
-    if (isLoggedIn && user?.role === "admin") {
+    if (user?.role === "admin") {
       fetchAll();
     }
-  }, [isLoggedIn, user]);
+  }, [user]);
 
   const fetchAll = async () => {
     setLoading(true);
@@ -93,10 +91,10 @@ export default function AdminPage() {
     try {
       const [statsRes, productsRes, ordersRes, categoriesRes] =
         await Promise.all([
-          axios.get("/api/admin/stats", { withCredentials: true }),
-          axios.get("/api/admin/products", { withCredentials: true }),
-          axios.get("/api/admin/orders", { withCredentials: true }),
-          axios.get("/api/categories"),
+          API.get("/admin/stats", { withCredentials: true }),
+          API.get("/admin/products", { withCredentials: true }),
+          API.get("/admin/orders", { withCredentials: true }),
+          API.get("/categories"),
         ]);
       setStats(statsRes.data.data);
       setProducts(productsRes.data.data);
@@ -124,8 +122,8 @@ export default function AdminPage() {
     setFormLoading(true);
     setError(null);
     try {
-      await axios.post(
-        "/api/products",
+      await API.post(
+        "/products",
         {
           ...formData,
           price: parseInt(formData.price),
@@ -153,8 +151,8 @@ export default function AdminPage() {
     setError(null);
 
     try {
-      await axios.put(
-        `/api/products/${editingId}`,
+      await API.put(
+        `/products/${editingId}`,
         {
           ...formData,
           price: parseInt(formData.price),
@@ -179,7 +177,7 @@ export default function AdminPage() {
   const handleDeleteProduct = async (id: number) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
-      await axios.delete(`/api/products/${id}`, { withCredentials: true });
+      await API.delete(`/products/${id}`, { withCredentials: true });
       setSuccess("Product deleted.");
       fetchAll();
       setTimeout(() => setSuccess(null), 3000);
@@ -203,8 +201,8 @@ export default function AdminPage() {
 
   const handleUpdateOrderStatus = async (id: number, status: string) => {
     try {
-      await axios.put(
-        `/api/admin/orders/${id}`,
+      await API.put(
+        `/admin/orders/${id}`,
         { status },
         { withCredentials: true },
       );
@@ -229,7 +227,7 @@ export default function AdminPage() {
     }
   };
 
-  if (authLoading || !isLoggedIn || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import axios from "axios";
+import API from "@/lib/axios";
 import { CheckCircle, Package, ArrowRight, Home } from "lucide-react";
 import Link from "next/link";
 
@@ -33,7 +33,7 @@ function SuccessContent() {
 
   const fetchOrderDetails = async () => {
     try {
-      const res = await axios.get(`/api/orders/${orderId}`, {
+      const res = await API.get(`/orders/${orderId}`, {
         withCredentials: true,
       });
       setOrder(res.data.data);

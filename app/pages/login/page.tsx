@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Dumbbell, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
+import API from "@/lib/axios";
 import { useAuth } from "@/context/AuthContext";
 
 export default function SignIn() {
@@ -19,7 +20,7 @@ export default function SignIn() {
     setError(null);
     setLoading(true);
     try {
-      await axios.post("/api/auth/login", formData, {
+      await API.post("/auth/login", formData, {
         withCredentials: true,
       });
       await login();

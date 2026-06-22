@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import axios from "axios";
+import API from "@/lib/axios";
 import { CreditCard, Package } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -36,8 +36,8 @@ export default function CheckoutPage() {
         return;
       }
 
-      const res = await axios.post(
-        "/api/checkout",
+      const res = await API.post(
+        "/checkout",
         {
           items: items.map((item) => ({
             product_id: item.product.id,
@@ -60,8 +60,8 @@ export default function CheckoutPage() {
         order_id: razorpayOrderId,
         handler: async (response: any) => {
           try {
-            await axios.post(
-              "/api/checkout/verify",
+            await API.post(
+              "/checkout/verify",
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

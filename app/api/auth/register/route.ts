@@ -2,8 +2,7 @@ import pool from "@/lib/db";
 import { RegisterData } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt'
-import  jwt from "jsonwebtoken";
-import { signToken } from "@/lib/auth";
+import { signAccessToken, signRefreshToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest){
     try {
@@ -31,29 +30,48 @@ export async function POST(request: NextRequest){
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const newUser = await pool.query(
+        const result = await pool.query(
             `INSERT INTO users(name, email, password) 
             VALUES($1, $2, $3)
-            RETURNING *`,
+            RETURNING id, role`,
             [name, email, hashedPassword]
         )
 
-        const token = signToken({id: newUser.rows[0].id, role: newUser.rows[0].role});
+        const newUser = result.rows[0];
+        
+        const accessToken = signAccessToken({id: newUser.id, role: newUser.role});
+        const refreshToken = signRefreshToken({id: newUser.id, role: newUser.role});
+        
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 30);
 
+          await pool.query(`
+          INSERT INTO refresh_tokens(user_id, token, expires_at)
+          VALUES ($1, $2, $3)  
+        `, [newUser.id, refreshToken, expiresAt]);
+        
         const response =  NextResponse.json(
             {message: 'Account creation successful'},
             {status: 200}
         );
 
-          response.cookies.set('AccessToken', token, {
+          response.cookies.set('AccessToken', accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            maxAge: 60 * 60 * 24, // seconds (1 day)
+            maxAge: 60 * 15, 
             path: "/",
         });
 
-        return response;
+        response.cookies.set('RefreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24 * 30,
+            path: '/' 
+        });
+
+         return response;
     } catch (error) {
         console.log("Register error: ", error);
         return NextResponse.json(

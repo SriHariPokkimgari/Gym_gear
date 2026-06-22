@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "./auth";
+import { verifyAccessToken } from "./auth";
 
 export async function getAuthUser(request: NextRequest){
     try {
@@ -9,7 +9,7 @@ export async function getAuthUser(request: NextRequest){
             return null
         }
 
-        const decode = verifyToken(token);
+        const decode = verifyAccessToken(token);
         return decode
     } catch (error) {
         return null;

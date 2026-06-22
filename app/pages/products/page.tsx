@@ -2,7 +2,7 @@
 
 import ProductCard from "@/components/ProductCard";
 import { Category, Product } from "@/types";
-import axios from "axios";
+import API from "@/lib/axios";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -23,7 +23,7 @@ export default function Products() {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get("/api/categories");
+      const res = await API.get("/categories");
       setCategories(res.data.data);
     } catch (error) {
       console.error(error);
@@ -36,7 +36,7 @@ export default function Products() {
       if (selectedCategory) params.category = selectedCategory;
       if (search) params.search = search;
 
-      const res = await axios.get("/api/products/", { params });
+      const res = await API.get("/products/", { params });
       setProducts(res.data.data);
     } catch (error) {
       console.error(error);

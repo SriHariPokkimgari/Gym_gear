@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
+import API from "@/lib/axios";
 import { Package, ArrowLeft, CheckCircle, Clock, XCircle } from "lucide-react";
 import Link from "next/link";
-import { useRequireAuth } from "@/hooks/useRequiredAuth";
 
 interface OrderItem {
   name: string;
@@ -26,17 +25,16 @@ interface OrderDetail {
 export default function OrderDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { isLoggedIn, loading: authLoading } = useRequireAuth();
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isLoggedIn) fetchOrder();
-  }, [isLoggedIn, id]);
+    fetchOrder();
+  }, [id]);
 
   const fetchOrder = async () => {
     try {
-      const res = await axios.get(`/api/orders/${id}`, {
+      const res = await API.get(`/orders/${id}`, {
         withCredentials: true,
       });
       setOrder(res.data.data);
@@ -85,7 +83,7 @@ export default function OrderDetailPage() {
     }
   };
 
-  if (authLoading || !isLoggedIn || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />

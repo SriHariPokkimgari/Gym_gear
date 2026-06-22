@@ -2,7 +2,7 @@
 
 import { useCart } from "@/context/CartContext";
 import { Product } from "@/types";
-import axios from "axios";
+import API from "@/lib/axios";
 import { ArrowLeft, Minus, Package, Plus, ShoppingCart } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -25,14 +25,10 @@ export default function ProductDetailsPage() {
   const fetchProduct = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`/api/products/${id}`);
+      const res = await API.get(`/products/${id}`);
       setProduct(res.data.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error.response?.data ?? error.message);
-      } else {
-        console.error(error);
-      }
+      console.log(error);
     } finally {
       setLoading(false);
     }
