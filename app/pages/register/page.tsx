@@ -208,7 +208,10 @@ export default function Register() {
           </div>
 
           {/* Google */}
-          <button className="w-full flex items-center justify-center gap-3 py-2.5 border border-slate-700 hover:border-slate-600 hover:bg-slate-800 text-slate-300 text-sm rounded-lg transition-colors">
+          <button
+            onClick={() => (window.location.href = "/api/auth/google")}
+            className="w-full flex items-center justify-center gap-3 py-2.5 border border-slate-700 hover:border-slate-600 hover:bg-slate-800 text-slate-300 text-sm rounded-lg transition-colors"
+          >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"

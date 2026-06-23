@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Dumbbell, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
@@ -13,7 +13,9 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const oauthError = searchParams.get("error");
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -58,6 +60,19 @@ export default function SignIn() {
           {error && (
             <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg">
               <p className="text-red-400 text-sm">{error}</p>
+            </div>
+          )}
+
+          {oauthError && (
+            <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <p className="text-red-400 text-sm">
+                {oauthError === "oauth_failed" &&
+                  "Google sign in failed. Please try again."}
+                {oauthError === "google_failed" &&
+                  "Could not retrieve Google account info."}
+                {oauthError === "missing_code" &&
+                  "Authentication was cancelled."}
+              </p>
             </div>
           )}
 
@@ -137,7 +152,10 @@ export default function SignIn() {
           </div>
 
           {/* Google */}
-          <button className="w-full flex items-center justify-center gap-3 py-2.5 border border-slate-700 hover:border-slate-600 hover:bg-slate-800 text-slate-300 text-sm rounded-lg transition-colors">
+          <button
+            onClick={() => (window.location.href = "/api/auth/google")}
+            className="w-full flex items-center justify-center gap-3 py-2.5 border border-slate-700 hover:border-slate-600 hover:bg-slate-800 text-slate-300 text-sm rounded-lg transition-colors"
+          >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
