@@ -127,7 +127,7 @@ export default function SignIn() {
                 <span className="text-slate-400">Remember me</span>
               </label>
               <a
-                href="#"
+                href="/pages/forgot-password"
                 className="text-orange-400 hover:text-orange-300 transition-colors"
               >
                 Forgot password?
