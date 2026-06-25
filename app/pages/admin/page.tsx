@@ -10,7 +10,6 @@ import {
   Pencil,
   Plus,
   ShoppingBag,
-  Target,
   Trash2,
   TrendingUp,
   Users,
@@ -18,6 +17,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 type Tab = "overview" | "products" | "orders";
 
@@ -72,6 +72,7 @@ export default function AdminPage() {
   const [formLoading, setFormLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (user?.role !== "admin") {
@@ -211,6 +212,26 @@ export default function AdminPage() {
       setTimeout(() => setSuccess(null), 3000);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const data = new FormData();
+    data.append("file", file);
+    try {
+      const res = await axios.post("/api/upload", data, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setFormData({ ...formData, image_url: res.data.url });
+    } catch (error) {
+      setError("Image upload failed.");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -384,12 +405,6 @@ export default function AdminPage() {
                         type: "number",
                         placeholder: "e.g. 49",
                       },
-                      {
-                        label: "Image URL",
-                        key: "image_url",
-                        type: "text",
-                        placeholder: 'e.g. "https://..."',
-                      },
                     ].map(({ label, key, type, placeholder }) => (
                       <div key={key}>
                         <label className="block text-xs font-medium text-slate-400 mb-1.5">
@@ -407,7 +422,30 @@ export default function AdminPage() {
                         />
                       </div>
                     ))}
-
+                    {/* Image */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-medium text-slate-400 mb-1.5">
+                        Product Image
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="w-full bg-slate-800 border border-slate-700 text-white text-sm rounded-lg px-3 py-2.5 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:bg-orange-500 file:text-white file:text-xs"
+                      />
+                      {uploading && (
+                        <p className="text-slate-500 text-xs mt-1">
+                          Uploading...
+                        </p>
+                      )}
+                      {formData.image_url && (
+                        <img
+                          src={formData.image_url}
+                          alt="Preview"
+                          className="w-16 h-16 object-cover rounded-lg mt-2"
+                        />
+                      )}
+                    </div>
                     {/* Category */}
                     <div>
                       <label className="block text-xs font-medium text-slate-400 mb-1.5">
@@ -660,11 +698,20 @@ export default function AdminPage() {
                     onChange={(e) =>
                       handleUpdateOrderStatus(order.id, e.target.value)
                     }
-                    className="bg-slate-800 border border-slate-700 text-white text-xs rounded-lg px-2 py-1.5 focus:outline-none focus:border-orange-500 transition-colors"
+                    className={`${statusStyle(order.status)} text-xs rounded-lg px-2 py-1.5 focus:outline-none focus:border-orange-500 transition-colors`}
                   >
-                    <option value="pending">Pending</option>
-                    <option value="paid">Paid</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option className={statusStyle("pending")} value="pending">
+                      Pending
+                    </option>
+                    <option className={statusStyle("paid")} value="paid">
+                      Paid
+                    </option>
+                    <option
+                      className={statusStyle("cancelled")}
+                      value="cancelled"
+                    >
+                      Cancelled
+                    </option>
                   </select>
                 </div>
 
@@ -700,11 +747,23 @@ export default function AdminPage() {
                       onChange={(e) =>
                         handleUpdateOrderStatus(order.id, e.target.value)
                       }
-                      className="bg-slate-800 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-orange-500 transition-colors"
+                      className={`text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-orange-500 transition-colors ${statusStyle(order.status)}`}
                     >
-                      <option value="pending">Pending</option>
-                      <option value="paid">Paid</option>
-                      <option value="cancelled">Cancelled</option>
+                      <option
+                        value="pending"
+                        className={statusStyle("pending")}
+                      >
+                        Pending
+                      </option>
+                      <option value="paid" className={statusStyle("paid")}>
+                        Paid
+                      </option>
+                      <option
+                        value="cancelled"
+                        className={statusStyle("cancelled")}
+                      >
+                        Cancelled
+                      </option>
                     </select>
                   </div>
                 </div>
