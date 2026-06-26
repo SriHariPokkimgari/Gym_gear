@@ -72,7 +72,7 @@ export default function CheckoutPage() {
             );
 
             clearCart();
-            router.push(`/pages/orders/success?order_id=${orderId}`);
+            router.push(`/orders/success?order_id=${orderId}`);
           } catch {
             setError("Payment verification failed. Contact support.");
           } finally {
@@ -103,7 +103,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (items.length === 0) {
-      router.push("/pages/cart");
+      router.push("/cart");
     }
   }, [items]);
 

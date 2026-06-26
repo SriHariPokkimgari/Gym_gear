@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 type Tab = "overview" | "products" | "orders";
 
@@ -223,7 +222,7 @@ export default function AdminPage() {
     const data = new FormData();
     data.append("file", file);
     try {
-      const res = await axios.post("/api/upload", data, {
+      const res = await API.post("/upload", data, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });

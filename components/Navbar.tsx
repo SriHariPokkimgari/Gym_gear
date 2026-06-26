@@ -6,7 +6,6 @@ import { useRouter, usePathname } from "next/navigation";
 import { Dumbbell, ShoppingCart, User, LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import path from "path";
 
 const Navbar = () => {
   const { isLoggedIn, user, logout } = useAuth();
@@ -19,15 +18,15 @@ const Navbar = () => {
   const handleLogout = async () => {
     await logout();
     setMobileMenuOpen(false);
-    router.push("/pages/login");
+    router.push("/login");
   };
 
   useEffect(() => {
-    if (pathName.split("/")[2] === "products") {
+    if (pathName.split("/")[1] === "products") {
       setActiveTab("products");
-    } else if (pathName.split("/")[2] === "login") {
+    } else if (pathName.split("/")[1] === "login") {
       setActiveTab("");
-    } else if (pathName.split("/")[2] === "cart") {
+    } else if (pathName.split("/")[1] === "cart") {
       setActiveTab("");
     }
   }, [pathName]);
@@ -69,7 +68,7 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            href="/pages/products"
+            href="/products"
             className={navLinkClass("products")}
             onClick={() => setActiveTab("products")}
           >
@@ -77,7 +76,7 @@ const Navbar = () => {
           </Link>
           {user?.role === "admin" && (
             <Link
-              href="/pages/admin"
+              href="/admin"
               className={navLinkClass("admin")}
               onClick={() => setActiveTab("admin")}
             >
@@ -86,7 +85,7 @@ const Navbar = () => {
           )}
           {isLoggedIn && (
             <Link
-              href="/pages/orders"
+              href="/orders"
               className={navLinkClass("orders")}
               onClick={() => setActiveTab("orders")}
             >
@@ -99,7 +98,7 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           {/* Cart */}
           <Link
-            href="/pages/cart"
+            href="/cart"
             className="relative p-2 text-slate-400 hover:text-white transition-colors"
           >
             <ShoppingCart className="w-5 h-5" />
@@ -122,7 +121,7 @@ const Navbar = () => {
               </button>
             ) : (
               <Link
-                href="/pages/login"
+                href="/login"
                 className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
               >
                 <User className="w-4 h-4" />
@@ -159,7 +158,7 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            href="/pages/products"
+            href="/products"
             className={mobileLinkClass("products")}
             onClick={() => {
               setActiveTab("products");
@@ -171,7 +170,7 @@ const Navbar = () => {
 
           {user?.role === "admin" && (
             <Link
-              href="/pages/admin"
+              href="/admin"
               className={mobileLinkClass("admin")}
               onClick={() => {
                 setActiveTab("admin");
@@ -184,7 +183,7 @@ const Navbar = () => {
 
           {isLoggedIn && (
             <Link
-              href="/pages/orders"
+              href="/orders"
               className={mobileLinkClass("orders")}
               onClick={() => {
                 setActiveTab("orders");
@@ -207,7 +206,7 @@ const Navbar = () => {
               </button>
             ) : (
               <Link
-                href="/pages/login"
+                href="/login"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center justify-center gap-2 w-full bg-orange-500 hover:bg-orange-400 text-white text-sm font-semibold px-4 py-3 rounded-xl transition-colors"
               >

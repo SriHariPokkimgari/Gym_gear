@@ -63,7 +63,7 @@ export default function ProductDetailsPage() {
         <div className="text-center">
           <p className="text-slate-400 text-sm mb-3">Product not found</p>
           <Link
-            href="/pages/products"
+            href="/products"
             className="text-orange-400 hover:text-orange-300 text-sm"
           >
             ← Back to products

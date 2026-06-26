@@ -96,7 +96,7 @@ export default function OrdersPage() {
               Start shopping to see your orders here
             </p>
             <Link
-              href="/pages/products"
+              href="/products"
               className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-sm font-semibold px-5 py-2.5 rounded-2xl transition-colors"
             >
               Browse Products
@@ -109,7 +109,7 @@ export default function OrdersPage() {
             {orders.map((order) => (
               <Link
                 key={order.id}
-                href={`/pages/orders/${order.id}`}
+                href={`/orders/${order.id}`}
                 className="block bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 transition-all group"
               >
                 <div className="flex items-center justify-between gap-3">

@@ -41,7 +41,7 @@ export default function Register() {
         { withCredentials: true },
       );
       await login();
-      router.push("/pages/products");
+      router.push("/products");
     } catch (err: any) {
       setError(err.response?.data?.message || "Something went wrong.");
     } finally {
@@ -237,7 +237,7 @@ export default function Register() {
           <div className="mt-6 text-center text-sm">
             <span className="text-slate-500">Already have an account? </span>
             <Link
-              href="/pages/login"
+              href="/login"
               className="text-orange-400 hover:text-orange-300 transition-colors font-medium"
             >
               Sign in

@@ -84,7 +84,7 @@ function ResetPasswordContent() {
                 Redirecting to login in 3 seconds...
               </p>
               <Link
-                href="/pages/login"
+                href="/login"
                 className="text-orange-400 hover:text-orange-300 text-sm transition-colors"
               >
                 Go to login →

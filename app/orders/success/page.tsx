@@ -171,7 +171,7 @@ function SuccessContent() {
         {/* CTAs */}
         <div className="flex flex-col gap-3">
           <Link
-            href="/pages/orders"
+            href="/orders"
             className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-400 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
           >
             View All Orders

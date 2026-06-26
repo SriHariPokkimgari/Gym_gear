@@ -29,7 +29,7 @@ export async function POST(request: NextRequest){
         };
 
         await pool.query(`
-          UPDATE orders SET status = 'paid', stripe_payment_id = $1 WHERE id = $2  
+          UPDATE orders SET status = 'paid', razorpay_payment_id = $1 WHERE id = $2  
         `, [razorpay_payment_id, order_id]);
 
         const orderItems = await pool.query(`

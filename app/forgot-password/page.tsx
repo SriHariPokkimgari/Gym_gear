@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
                 folder.
               </p>
               <Link
-                href="/pages/login"
+                href="/login"
                 className="text-orange-400 hover:text-orange-300 text-sm transition-colors"
               >
                 ← Back to login
@@ -107,7 +107,7 @@ export default function ForgotPasswordPage() {
 
               <div className="mt-6 text-center">
                 <Link
-                  href="/pages/login"
+                  href="/login"
                   className="flex items-center justify-center gap-1.5 text-slate-400 hover:text-white text-sm transition-colors"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />

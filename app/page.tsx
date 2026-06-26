@@ -24,7 +24,7 @@ export default function HomePage() {
             train hard, anywhere.
           </p>
           <Link
-            href="/pages/products"
+            href="/products"
             className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors"
           >
             Shop Now
@@ -75,7 +75,7 @@ export default function HomePage() {
           Browse our full collection of gym equipment.
         </p>
         <Link
-          href="/pages/products"
+          href="/products"
           className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors"
         >
           Explore Products

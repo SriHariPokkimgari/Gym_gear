@@ -97,7 +97,7 @@ export default function OrderDetailPage() {
         <div className="text-center">
           <p className="text-slate-400 text-sm mb-3">Order not found</p>
           <Link
-            href="/pages/orders"
+            href="/orders"
             className="text-orange-400 hover:text-orange-300 text-sm"
           >
             ← Back to orders
@@ -208,7 +208,7 @@ export default function OrderDetailPage() {
 
         {/* CTA */}
         <Link
-          href="/pages/products"
+          href="/products"
           className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-400 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
         >
           Continue Shopping

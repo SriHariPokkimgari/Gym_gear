@@ -26,10 +26,10 @@ export default function CartPage() {
 
   const handleCheckout = () => {
     if (!isLoggedIn) {
-      router.push("/pages/login");
+      router.push("/login");
       return;
     }
-    router.push("/pages/checkout");
+    router.push("/checkout");
   };
 
   //Empty cart state
@@ -45,7 +45,7 @@ export default function CartPage() {
             Looks like you haven't added anything yet
           </p>
           <Link
-            href="/pages/products"
+            href="/products"
             className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
           >
             Browse Products
@@ -180,7 +180,7 @@ export default function CartPage() {
               </button>
 
               <Link
-                href="/pages/products"
+                href="/products"
                 className="block text-center text-slate-400 hover:text-white text-xs mt-3 transition-colors"
               >
                 ← Continue shopping

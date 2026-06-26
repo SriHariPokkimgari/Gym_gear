@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Dumbbell, Mail, Lock } from "lucide-react";
 import { useState } from "react";
-import axios from "axios";
 import API from "@/lib/axios";
 import { useAuth } from "@/context/AuthContext";
 
@@ -26,7 +25,7 @@ export default function SignIn() {
         withCredentials: true,
       });
       await login();
-      router.push("/pages/products");
+      router.push("/products");
     } catch (err: any) {
       setError(err.response?.data?.message || "Something went wrong.");
     } finally {
@@ -127,7 +126,7 @@ export default function SignIn() {
                 <span className="text-slate-400">Remember me</span>
               </label>
               <a
-                href="/pages/forgot-password"
+                href="/forgot-password"
                 className="text-orange-400 hover:text-orange-300 transition-colors"
               >
                 Forgot password?
@@ -181,7 +180,7 @@ export default function SignIn() {
           <div className="mt-6 text-center text-sm">
             <span className="text-slate-500">Don't have an account? </span>
             <Link
-              href="/pages/register"
+              href="/register"
               className="text-orange-400 hover:text-orange-300 transition-colors font-medium"
             >
               Sign up
