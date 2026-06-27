@@ -23,7 +23,7 @@ export default function Products() {
 
   const fetchCategories = async () => {
     try {
-      const res = await API.get("/categories");
+      const res = await API.get<{ data: Category[] }>("/categories");
       setCategories(res.data.data);
     } catch (error) {
       console.error(error);
@@ -36,7 +36,7 @@ export default function Products() {
       if (selectedCategory) params.category = selectedCategory;
       if (search) params.search = search;
 
-      const res = await API.get("/products/", { params });
+      const res = await API.get<{ data: Product[] }>("/products/", { params });
       setProducts(res.data.data);
     } catch (error) {
       console.error(error);

@@ -2,6 +2,7 @@
 
 //import { useRequireAuth } from "@/hooks/useRequiredAuth";
 import API from "@/lib/axios";
+import { OrderItem } from "@/types";
 import { ChevronRight, Package, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,7 +16,6 @@ interface Order {
 }
 
 export default function OrdersPage() {
-  //const { isLoggedIn, loading: authLoading } = useRequireAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +25,9 @@ export default function OrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const res = await API.get("/orders", { withCredentials: true });
+      const res = await API.get<{ data: Order[] }>("/orders", {
+        withCredentials: true,
+      });
       setOrders(res.data.data);
     } catch (error: any) {
       console.error(error);

@@ -34,7 +34,7 @@ export default function OrderDetailPage() {
 
   const fetchOrder = async () => {
     try {
-      const res = await API.get(`/orders/${id}`, {
+      const res = await API.get<{ data: OrderDetail }>(`/orders/${id}`, {
         withCredentials: true,
       });
       setOrder(res.data.data);

@@ -33,7 +33,7 @@ function SuccessContent() {
 
   const fetchOrderDetails = async () => {
     try {
-      const res = await API.get(`/orders/${orderId}`, {
+      const res = await API.get<{ data: OrderDetails }>(`/orders/${orderId}`, {
         withCredentials: true,
       });
       setOrder(res.data.data);

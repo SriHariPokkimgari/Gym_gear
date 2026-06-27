@@ -33,7 +33,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get("/api/cart", { withCredentials: true });
+      const res = await axios.get<{ data: CartItem[] }>("/api/cart", {
+        withCredentials: true,
+      });
       const cartItems: CartItem[] = res.data.data.map((item: any) => ({
         product: {
           id: item.product_id,
@@ -42,6 +44,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           image_url: item.image_url,
           stock: item.stock,
           category_name: item.category_name,
+          description: "",
+          category_id: 0,
         },
         quantity: item.quantity,
       }));

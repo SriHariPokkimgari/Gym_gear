@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { Category, Product } from "@/types";
+import { Category, Order, Product } from "@/types";
 import API from "@/lib/axios";
 import {
   Check,
@@ -91,10 +91,14 @@ export default function AdminPage() {
     try {
       const [statsRes, productsRes, ordersRes, categoriesRes] =
         await Promise.all([
-          API.get("/admin/stats", { withCredentials: true }),
-          API.get("/admin/products", { withCredentials: true }),
-          API.get("/admin/orders", { withCredentials: true }),
-          API.get("/categories"),
+          API.get<{ data: Stats }>("/admin/stats", { withCredentials: true }),
+          API.get<{ data: Product[] }>("/admin/products", {
+            withCredentials: true,
+          }),
+          API.get<{ data: AdminOrder[] }>("/admin/orders", {
+            withCredentials: true,
+          }),
+          API.get<{ data: Category[] }>("/categories"),
         ]);
       setStats(statsRes.data.data);
       setProducts(productsRes.data.data);
