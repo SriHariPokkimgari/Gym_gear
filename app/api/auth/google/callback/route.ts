@@ -11,7 +11,7 @@ export async function GET(request: NextRequest){
 
     if(!code){
         return NextResponse.redirect(
-            `${process.env.NEXT_PUBLIC_API_URL}/pages/login?error=missing_code`
+            `${process.env.NEXT_PUBLIC_API_URL}/login?error=missing_code`
         )
     }
 
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest){
 
         if(!googleUser.email || !googleUser.id){
             return NextResponse.redirect(
-                `${process.env.NEXT_PUBLIC_API_URL}/pages/login?error=google_failed`
+                `${process.env.NEXT_PUBLIC_API_URL}/login?error=google_failed`
             )
         }
 
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest){
         `, [user.id, refreshToken, expiresAt]);
 
         const response = NextResponse.redirect(
-            `${process.env.NEXT_PUBLIC_API_URL}/pages/products`
+            `${process.env.NEXT_PUBLIC_API_URL}/products`
         );
 
         response.cookies.set('AccessToken', accessToken, {
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest){
     } catch (error) {
         console.error("Google OAuth error:", error);
         return NextResponse.redirect(
-            `${process.env.NEXT_PUBLIC_API_URL}/pages/login?error=0auth_failed`
+            `${process.env.NEXT_PUBLIC_API_URL}/login?error=0auth_failed`
         )
     }
 }
