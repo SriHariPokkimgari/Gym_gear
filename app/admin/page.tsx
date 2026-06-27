@@ -226,7 +226,7 @@ export default function AdminPage() {
     const data = new FormData();
     data.append("file", file);
     try {
-      const res = await API.post("/upload", data, {
+      const res = await API.post<{ url: string }>("/upload", data, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
