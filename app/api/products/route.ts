@@ -55,7 +55,7 @@ export async function POST(request: NextRequest){
 
     try {
         const {name, description, price, stock, image_url, category_id} = await request.json();
-        console.log(name, description)
+        
         if(!name || !price || !category_id){
             return NextResponse.json(
                 {message: 'Name, price and category are required.'},

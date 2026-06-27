@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { requireAdmin } from "@/lib/middleware";
-import { Construction } from "lucide-react";
+
 
 export async function GET(request: NextRequest, {params}: {params: Promise<{id:string}>}){
     const {id} = await params;
@@ -36,19 +36,20 @@ export async function GET(request: NextRequest, {params}: {params: Promise<{id:s
 };
 
 //PUT update product (Admin only)
-export async function PUT(request: NextRequest, {params}: {params: {id: string}}){
-    const authError = requireAdmin(request);
+export async function PUT(request: NextRequest, {params}: {params: Promise<{id: string}>}){
+    const authError = await requireAdmin(request);
 
     if(authError) return authError;
 
     try {
+        const {id} = await params
         const {name, description, price, stock, image_url, category_id} = await request.json()
         const result = await pool.query(
             `UPDATE products
             SET name=$1, description=$2, price=$3, stock=$4, image_url=$5, category_id=$6
             WHERE id=$7 RETURNING *
             `,
-            [name, description, price, stock, image_url, category_id, params.id]
+            [name, description, price, stock, image_url, category_id, id]
         );
 
         return NextResponse.json(
@@ -65,16 +66,17 @@ export async function PUT(request: NextRequest, {params}: {params: {id: string}}
 };
 
 //DELETE product (Admin only)
-export async function DELETE(request: NextRequest, {params} : {params: {id: string}}){
-    const authError = requireAdmin(request)
+export async function DELETE(request: NextRequest, {params} : {params: Promise<{id: string}>}){
+    const authError = await requireAdmin(request)
     
     if(authError) authError;
 
     try {
+        const {id} = await params
         const result = await pool.query(
             `DELETE FROM products
             WHERE id = $1 RETURNING *`,
-            [params.id]
+            [id]
         );
 
         return NextResponse.json(

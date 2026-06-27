@@ -499,7 +499,7 @@ export default function AdminPage() {
                       {formLoading
                         ? "Saving..."
                         : editingId
-                          ? "Update Prosuct"
+                          ? "Update Product"
                           : "Create Product"}
                     </button>
                     <button
