@@ -36,7 +36,13 @@ export default function CheckoutPage() {
         return;
       }
 
-      const res = await API.post(
+      const res = await API.post<{
+        orderId: string;
+        razorpayOrderId: string;
+        amount: number;
+        currency: string;
+        keyId: string;
+      }>(
         "/checkout",
         {
           items: items.map((item) => ({
