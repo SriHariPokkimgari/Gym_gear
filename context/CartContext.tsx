@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { CartItem, Product } from "@/types";
 import { useAuth } from "./AuthContext";
 import axios from "axios";
+import API from "@/lib/axios";
 
 interface CartContextType {
   items: CartItem[];
@@ -83,10 +84,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const removeFromCart = async (productId: number) => {
     if (isLoggedIn) {
-      await axios.delete("/api/cart/remove", {
+      await API.delete("/cart/remove", {
         data: { product_id: productId },
         withCredentials: true,
-      });
+      } as any);
       await fetchCart();
     } else {
       const newItems = items.filter((item) => item.product.id !== productId);
