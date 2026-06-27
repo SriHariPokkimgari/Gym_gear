@@ -3,7 +3,7 @@ import pool from "@/lib/db";
 import { requireAuth, getAuthUser } from "@/lib/middleware";
 
 
-export async function GET(request: NextRequest, {params}: {params: {id: string}}){
+export async function GET(request: NextRequest, {params}: {params: Promise<{id: string}>}){
     const authError = await requireAuth(request);
     if(authError) return authError;
 

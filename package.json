@@ -18,7 +18,6 @@
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
-    "node-email-verifier": "^4.0.0",
     "nodemailer": "^9.0.1",
     "pg": "^8.21.0",
     "razorpay": "^2.9.6",

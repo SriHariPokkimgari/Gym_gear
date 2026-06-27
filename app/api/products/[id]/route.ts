@@ -3,7 +3,7 @@ import pool from "@/lib/db";
 import { requireAdmin } from "@/lib/middleware";
 import { Construction } from "lucide-react";
 
-export async function GET(request: NextRequest, {params}: {params: {id:string}}){
+export async function GET(request: NextRequest, {params}: {params: Promise<{id:string}>}){
     const {id} = await params;
    
     try {

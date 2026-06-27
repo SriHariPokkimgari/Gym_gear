@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { requireAdmin } from "@/lib/middleware";
 
-export async function PUT(request: NextRequest, {params}: {params: {id: string}}){
+export async function PUT(request: NextRequest, {params}: {params: Promise<{id: string}>}){
     const authError = await requireAdmin(request);
     if(authError) return authError
 
