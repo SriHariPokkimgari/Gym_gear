@@ -65,7 +65,7 @@ const SignInContent = () => {
           {oauthError && (
             <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg">
               <p className="text-red-400 text-sm">
-                {oauthError === "oauth_failed" &&
+                {oauthError === "0auth_failed" &&
                   "Google sign in failed. Please try again."}
                 {oauthError === "google_failed" &&
                   "Could not retrieve Google account info."}
