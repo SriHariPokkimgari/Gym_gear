@@ -47,7 +47,7 @@ export default function ChatWidget() {
     setLoading(true);
 
     try {
-      const res = await axios.post("/api/chat", {
+      const res = await axios.post<{ response: string }>("/api/chat", {
         message: userMessage,
         history: getHistory(),
       });
