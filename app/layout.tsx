@@ -19,6 +19,21 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "GymGear",
   description: "Your ultimate gym utilities store",
+  openGraph: {
+    title: "GymGear",
+    description: "An e-commerce store for gym buddies with AI assistent",
+    url: "https://gym-gear.vercel.app/",
+    siteName: "GymGear",
+    images: [
+      {
+        url: "../public/og.png",
+        width: 1200,
+        height: 600,
+        alt: "open graph",
+      },
+    ],
+    type: "website",
+  },
 };
 
 export default function RootLayout({
